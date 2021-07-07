@@ -20,7 +20,7 @@ func main() {
 	owner := os.Getenv("GITHUB_OWNER")
 	repo := os.Getenv("GITHUB_REPO")
 	bucketName := os.Getenv("S3_BUCKET_NAME")
-	haltOnExistingAsset := os.Getenv("HALT_ON_EXISTING_ASSET") != ""
+	onExistingAsset := os.Getenv("ON_EXISTING_ASSET")
 
 	err := func() error {
 		ctx := context.Background()
@@ -99,7 +99,7 @@ func main() {
 					obj, _ := s3.GetObject(ctx, bucketName, assetName, minio.GetObjectOptions{})
 					_, err = obj.Stat()
 
-					if err != nil {
+					if err != nil || onExistingAsset == "overwrite" {
 						log.Printf("storing %s\n", assetName)
 
 						_, err = s3.PutObject(
@@ -109,6 +109,9 @@ func main() {
 							reader,
 							int64(asset.GetSize()),
 							minio.PutObjectOptions{
+								UserMetadata: map[string]string{
+									"x-amz-acl": "public-read",
+								},
 								ContentType: asset.GetContentType(),
 							},
 						)
@@ -116,7 +119,7 @@ func main() {
 						if err != nil {
 							return fmt.Errorf("failed to upload asset, %v", err)
 						}
-					} else if haltOnExistingAsset {
+					} else if onExistingAsset == "halt" {
 						log.Printf("assets already exist, halting")
 						return nil
 					}
