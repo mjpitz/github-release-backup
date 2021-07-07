@@ -1,2 +1,33 @@
 # github-release-backup
-Backup GitHub release artifacts to an S3 compatible backend
+
+A simple tool that backs up GitHub release assets to an S3 compatible backend.
+Not putting too much effort into this since I plan on it being a one and done type of situation.
+
+## Installation
+
+```shell script
+go get github.com/mjpitz/github-release-backup
+```
+
+## Usage
+
+```shell script
+# github configuration
+export GITHUB_OWNER="depscloud"
+export GITHUB_REPO="depscloud"
+export GITHUB_ACCESS_TOKEN="github_access_token" 
+
+# s3 configuration
+export S3_ENDPOINT="sfo2.digitaloceanspaces.com"
+export S3_DISABLE_SSL="1"
+export AWS_DEFAULT_REGION="region"
+export AWS_ACCESS_KEY_ID="aws_access_key_id"
+export AWS_SECRET_ACCESS_KEY="aws_secret_access_key"
+export S3_BUCKET_NAME="bucket_name"
+
+# halt on existing assets (useful for successive runs)
+export HALT_ON_EXISTING_ASSET="1"
+
+# run the script
+github-release-backup
+```
