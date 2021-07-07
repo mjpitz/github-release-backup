@@ -1,7 +1,8 @@
 # github-release-backup
 
 A simple tool that backs up GitHub release assets to an S3 compatible backend.
-Not putting too much effort into this since I plan on it being a one and done type of situation.
+By default, GitHub actions will only host artifacts for a maximum of 90 days.
+This tool can be used to perform a one-time backup of all release assets.
 
 ## Installation
 
